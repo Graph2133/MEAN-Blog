@@ -1,0 +1,178 @@
+<div class="container">
+  <md-tab-group>
+    <md-tab label="Edit profile">
+      <br>
+      <div class="col-md-offset-1 col-md-10">
+        <md-card>
+          <md-card-content>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-5">
+                    <p class="lead">
+                      <md-icon>account_box</md-icon> <strong>Username:</strong></p>
+                  </div>
+                  <div class="col-md-4">
+                    <p class="lead">
+                      <inline-editor #myNameEditor id="inline-first" type="text" (onSave)="saveEditable($event)" [(ngModel)]="username">
+                      </inline-editor>
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5">
+                    <p class="lead">
+                      <md-icon>mail</md-icon> <strong>Email:</strong></p>
+                  </div>
+                  <div class="col-md-4">
+                    <p class="lead">
+                      <inline-editor #myMailEditor id="inline-second" type="text" (onSave)="saveEditable($event)" [(ngModel)]="email">
+                      </inline-editor>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-offset-2  col-md-3">
+                <a href="avatarSrc" class="thumbnail"><img [src]="avatarSrc!= null ? avatarSrc : myImgUrl" > </a> &emsp;
+                <button md-raised-button *ngIf="!imageUploadMode" (click)="uploadImageModeOn()">Edit profile image  <i class="fa fa-upload fa-lg" aria-hidden="true"></i> </button>
+              </div>
+            </div>
+            <div *ngIf="imageUploadMode" class="row">
+
+              <div class="col-md-4">
+
+                <h4>Select files</h4>
+
+                <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)" [uploader]="uploader"
+                  class="well my-drop-zone text-center">
+                  Drag and drop image
+                  <br>
+                  <i class="fa fa-download fa-2x" aria-hidden="true"></i>
+                </div>
+
+                <span class="btn btn-default btn-file">
+            Choose File...<input type="file" ng2FileSelect [uploader]="uploader"  class="file"/>
+            </span>
+              </div>
+
+              <div class="col-md-8" style="margin-bottom: 40px">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th width="50%">Name</th>
+                      <th>Size</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of uploader.queue">
+                      <td><strong>{{ item?.file?.name }}</strong></td>
+                      <td>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                      <td>
+                        <span *ngIf="item.isSuccess" class="label label-success"><i class="fa fa-check fa-lg" aria-hidden="true"></i>Success</span>
+                        <span *ngIf="item.isCancel" class="label label-warning">Error</span>
+                        <span *ngIf="item.isError" class="label label-danger">Error</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div>
+                  <div>
+                    Queue progress:
+                    <div class="progress">
+                      <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+                    <span class="glyphicon glyphicon-upload"></span> Upload
+                </button>
+                  <button type="button" class="btn btn-warning btn-s" (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
+                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                </button>
+                  <button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue();" [disabled]="!uploader.queue.length">
+                    <span class="glyphicon glyphicon-trash"></span> Remove
+                </button>
+                  <button type="button" class="btn btn-default btn-s text-right" (click)="imageUploadMode=false;">
+                        <i class="fa fa-angle-double-left fa-lg"></i>
+                    Close upload panel
+                </button>
+                </div>
+
+              </div>
+
+            </div>
+            
+            <div class="row show-hide-message" *ngIf="errorMessage">
+              <div class="alert alert-warning">
+                <strong>Warning!</strong>&nbsp; {{ errorMessage }}
+              </div>
+            </div>
+
+          </md-card-content>
+          <md-card-actions>
+            <button *ngIf="!isEditing" md-button (click)="myNameEditor.edit({ editing: true }); myMailEditor.edit({ editing: true });isEditing=true">EDIT</button>
+            <button *ngIf="isEditing" md-button (click)="myNameEditor.edit({ editing: false }); myMailEditor.edit({ editing: false });isEditing=false;updateUserInfo()">APPLY CHANGES</button>
+          </md-card-actions>
+        </md-card>
+        <br>
+      </div>
+      <br>
+    </md-tab>
+    <!-- START OF SECOND TAB-->
+    <md-tab label="Your blog feed">
+
+      <br>
+
+      <div class="col-md-offset-1 col-md-10">
+        <div class="form-inline">
+          <p class="lead">Search:&nbsp; <input type="text" class="form-control" placeholder="blog details" [(ngModel)]="filter"></p>
+        </div>
+        <md-card>
+          <md-card-content>
+            <div class="panel panel-primary" *ngFor="let blog of blogPosts| stringFilter: filter  | paginate: { itemsPerPage: 4, currentPage: p }">
+              <!-- Panel Title -->
+              <div class="panel-heading">
+                <h3 class="panel-title">{{ blog.title }}</h3>
+              </div>
+
+              <!-- Panel Body -->
+              <div class="panel-body">
+                {{ blog.body }}
+              </div>
+
+              <!-- Panel Footer Start -->
+              <div class="panel-footer">
+                <strong>Posted by: </strong>{{ blog.createdBy }}
+                <br />
+                <strong>Date: </strong>{{ blog.createdAt | date:'MMM dd, yyyy' }}
+                <br />
+                <div *ngIf="username === blog.createdBy">
+                  <strong>Likes: </strong>{{ blog.likes }}
+                  <br />
+                  <strong>Dislikes: </strong>{{ blog.dislikes }}
+                </div>
+
+                <!-- Edit Button -->
+                <a [routerLink]="['/edit-blog/', blog._id]" *ngIf="username === blog.createdBy"><button type="button" name="button" class="btn btn-sm btn-info">Edit</button></a>
+                <a [routerLink]="['/delete-blog/', blog._id]" *ngIf="username === blog.createdBy"><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
+
+                <p>Result from dialog: {{ result }}</p>
+
+
+              </div>
+              <!-- Panel Footer End -->
+            </div>
+
+          </md-card-content>
+        </md-card>
+        <br>
+      </div>
+      <br>
+      <div class="col-md-6 text-center">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+      <br>
+    </md-tab>
+  </md-tab-group>
+</div>

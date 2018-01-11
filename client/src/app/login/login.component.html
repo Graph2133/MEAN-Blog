@@ -1,0 +1,46 @@
+<div id="wrapper">
+  <md-spinner *ngIf="processing" style="margin:auto;width:50px; "></md-spinner>
+  <!-- Custom Success/Error Message -->
+  <div class="row show-hide-message">
+    <div [ngClass]="messageClass">
+      {{ message }}
+    </div>
+  </div>
+  <!-- Login Form -->
+  <form [formGroup]="form" class="col-md-offset-3 col-md-6" (submit)="onLoginSubmit()" id="login-form">
+    <md-card>
+      <!-- Username Field -->
+      <md-card-header class="login-form-header">
+        <h2><span>Welcome</span></h2>
+      </md-card-header>
+      <br>
+      <md-card-content>
+        <div class="row ">
+          <md-icon mdPrefix class="col-md-1">face</md-icon>
+          <md-input-container class="col-md-11">
+            <input mdInput placeholder="Username" type="text" name="username" formControlName="username" />
+            <!-- Validation -->
+            <md-error *ngIf="form.controls.username.errors?.required && form.controls.username.dirty">This field is required.</md-error>
+          </md-input-container>
+        </div>
+        <!-- Password Field  -->
+        <div class="row">
+          <md-icon mdPrefix class="col-md-1">lock</md-icon>
+          <md-input-container class="col-md-11">
+            <input mdInput placeholder="Password" type="password" name="password" formControlName="password" />
+            <!-- Validation -->
+            <md-error *ngIf="form.controls.password.errors?.required && form.controls.password.dirty">This field is required.</md-error>
+          </md-input-container>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row">
+          <div class="col-md-11">
+            <button md-raised-button [disabled]="!form.valid || processing" class="pull-right" type="submit">Sign In</button>
+          </div>
+        </div>
+        <br>
+      </md-card-content>
+    </md-card>
+  </form>
+</div>

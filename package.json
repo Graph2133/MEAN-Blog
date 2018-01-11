@@ -1,0 +1,34 @@
+{
+  "name": "mean-with-ang2",
+  "version": "1.0.0",
+  "description": "MEAN Stack application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Graph2133/Mean-Angular2.git"
+  },
+  "keywords": [
+    "MEAN",
+    "Stack",
+    "Angular2"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Graph2133/Mean-Angular2/issues"
+  },
+  "homepage": "https://github.com/Graph2133/Mean-Angular2#readme",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "express": "^4.15.3",
+    "jsonwebtoken": "^7.4.1",
+    "mongoose": "^4.11.3",
+    "multer": "^1.3.0"
+  }
+}

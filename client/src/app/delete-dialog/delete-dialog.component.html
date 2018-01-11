@@ -1,0 +1,16 @@
+<div class="text-left">
+<p class="lead">{{ title }}</p>
+</div>
+
+<md-card class="example-card">
+
+    <md-card-content>
+        <p class="h4">{{ message }} </p>
+    </md-card-content>
+    <md-card-actions>
+    <div class="text-right">
+        <button class="btn btn-primary" type="button" (click)="dialogRef.close(true)">OK</button>
+        <button class="btn btn-warning" type="button" (click)="dialogRef.close()">Cancel</button>
+    </div>
+    </md-card-actions>
+</md-card>
